@@ -8,6 +8,8 @@
 #define BTN_SELECT 5
 #define BTN_NONE 10
 
+#define STATE_ONE 11
+#define STATE_TWO 22
 
 Servo esc;
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
@@ -19,6 +21,9 @@ int escSpeed = 1110;
 
 int RPM;
 int rotorRadius = 75; // mm
+
+int button;
+int dispState = STATE_ONE;
 
 int detectButton() {
   int keyAnalog =  analogRead(A0);
@@ -51,7 +56,7 @@ void setup() {
 void loop() {
   lcd.clear();
   
-  int button = detectButton();
+  button = detectButton();
   
   switch (button) {
     case BTN_UP:
@@ -68,6 +73,12 @@ void loop() {
       } else {
           break;
         }
+    case BTN_SELECT:
+      if (dispState == STATE_ONE){
+        dispState = STATE_TWO;
+      } else {
+          dispState = STATE_ONE;
+      }
     default:
       break;
    }
@@ -82,17 +93,28 @@ void loop() {
   
   float RPMfloat = RPM;
   float RPMsqr = (RPMfloat / 1000) * (RPMfloat / 1000);
-  float RCF = 1.12 * rotorRadius * RPMsqr;
+  float RCF = 1.12 * rotorRadius * RPMsqr; 
   
-  lcd.setCursor(0, 0);
-  lcd.print("Speed: ");
-  lcd.print(RPM);
-  lcd.print(" RPM");
+  switch(dispState){
+    case STATE_ONE:
+      lcd.print("Speed: ");
+      lcd.print(RPM);
+      lcd.print(" RPM");
+    case STATE_TWO:
+      lcd.print("  RCF: ");
+      lcd.print(RCF);
+      lcd.print(" g"
+  }
   
-  lcd.setCursor(0, 1);
-  lcd.print("  RCF: ");
-  lcd.print(RCF);
-  lcd.print(" g");
+  //lcd.setCursor(0, 0);
+  //lcd.print("Speed: ");
+  //lcd.print(RPM);
+  //lcd.print(" RPM");
+  
+  //lcd.setCursor(0, 1);
+  //lcd.print("  RCF: ");
+  //lcd.print(RCF);
+  //lcd.print(" g");
   
   delay(150);
 }
