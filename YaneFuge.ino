@@ -45,7 +45,7 @@ int detectButton() {
 
 void setup() {
   lcd.begin(16, 2); 
-  lcd.print("  YaneFuge 1.0");
+  lcd.print("  YaneFuge 1.1");
   
   esc.attach(escPin, minPulse, maxPulse);
   esc.write(1000);
@@ -101,9 +101,9 @@ void loop() {
       lcd.print(RPM);
       lcd.print(" RPM");
     case STATE_TWO:
-      lcd.print("  RCF: ");
+      lcd.print("RCF: ");
       lcd.print(RCF);
-      lcd.print(" g"
+      lcd.print(" g");
   }
   
   //lcd.setCursor(0, 0);
