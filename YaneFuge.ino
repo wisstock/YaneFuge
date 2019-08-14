@@ -11,6 +11,9 @@
 #define STATE_ONE 11
 #define STATE_TWO 22
 
+#define ROTATION_ON 33
+#define ROTATIIN_OFF 44
+
 Servo esc;
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
 
@@ -23,7 +26,7 @@ int RPM;
 int rotorRadius = 75; // mm
 
 int button;
-int dispState = STATE_ONE;
+int dispState;
 
 int detectButton() {
   int keyAnalog =  analogRead(A0);
@@ -42,14 +45,19 @@ int detectButton() {
   }
 }
 
+void clearLine(int line){
+  lcd.setCursor(0, 1);
+  lcd.print("                ");
+}
+
 
 void setup() {
   lcd.begin(16, 2); 
-  lcd.print("  YaneFuge 1.1");
   
   esc.attach(escPin, minPulse, maxPulse);
   esc.write(1000);
-  delay(1500);
+  
+  dispState = STATE_ONE;
 }
 
 
@@ -94,27 +102,27 @@ void loop() {
   float RPMfloat = RPM;
   float RPMsqr = (RPMfloat / 1000) * (RPMfloat / 1000);
   float RCF = 1.12 * rotorRadius * RPMsqr; 
+ 
+  lcd.setCursor(0, 0);
+  lcd.print("YaneFuge v1.3");
   
   switch(dispState){
     case STATE_ONE:
+      lcd.setCursor(0, 1);
       lcd.print("Speed: ");
       lcd.print(RPM);
       lcd.print(" RPM");
+      break;
     case STATE_TWO:
+      lcd.setCursor(0, 1);
       lcd.print("RCF: ");
       lcd.print(RCF);
       lcd.print(" g");
+      break;
+    default:
+      clearLine(1);
+      break;
   }
-  
-  //lcd.setCursor(0, 0);
-  //lcd.print("Speed: ");
-  //lcd.print(RPM);
-  //lcd.print(" RPM");
-  
-  //lcd.setCursor(0, 1);
-  //lcd.print("  RCF: ");
-  //lcd.print(RCF);
-  //lcd.print(" g");
   
   delay(150);
 }
