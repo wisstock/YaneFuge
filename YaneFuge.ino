@@ -11,8 +11,7 @@
 #define STATE_ONE 11
 #define STATE_TWO 22
 
-#define ROTATION_ON 33
-#define ROTATIIN_OFF 44
+#define SHORT_SPIN 33
 
 Servo esc;
 LiquidCrystal lcd(8, 9, 4, 5, 6, 7);
@@ -66,6 +65,14 @@ void loop() {
   
   button = detectButton();
   
+  if (button == BTN_RIGHT) {
+    esc.write(1900);
+    lcd.setCursor(0, 0);
+    lcd.print("YaneFuge v1.4");
+    lcd.setCursor(0, 1);
+    lcd.print("Short Spin");
+  } else {
+  
   switch (button) {
     case BTN_UP:
       if (escSpeed < 2000) {
@@ -86,11 +93,13 @@ void loop() {
         dispState = STATE_TWO;
       } else {
           dispState = STATE_ONE;
-      }
+      }  
     default:
       break;
    }
-   
+  
+  
+  
   esc.write(escSpeed);
   
   if (escSpeed > 1120) {
@@ -104,7 +113,7 @@ void loop() {
   float RCF = 1.12 * rotorRadius * RPMsqr; 
  
   lcd.setCursor(0, 0);
-  lcd.print("YaneFuge v1.3");
+  lcd.print("YaneFuge v1.4");
   
   switch(dispState){
     case STATE_ONE:
@@ -122,6 +131,7 @@ void loop() {
     default:
       clearLine(1);
       break;
+  }
   }
   
   delay(150);
